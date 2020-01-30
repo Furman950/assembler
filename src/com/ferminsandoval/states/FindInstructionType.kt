@@ -1,7 +1,9 @@
 package com.ferminsandoval.states
 
 import com.ferminsandoval.Assembler
+import com.ferminsandoval.models.dataProcessing
 import com.ferminsandoval.models.moveInstructions
+import com.ferminsandoval.states.dataprocessing.DataProcessingInstruction
 import com.ferminsandoval.states.move.MoveInstruction
 
 class FindInstructionType : State {
@@ -11,9 +13,17 @@ class FindInstructionType : State {
 
         if (moveInstructions.containsKey(label)){
             if (instruction.parameters.size < 2){
-                return Error("Expected two parameters, but found ${assembler.currentLine}")
+                return Error("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
             }
             return MoveInstruction()
+        }
+
+        else if (dataProcessing.containsKey(label)) {
+            if (instruction.parameters.size < 3){
+                return Error("Expected three parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+            }
+
+            return DataProcessingInstruction()
         }
 
         return Error("$label is not a valid instruction")
