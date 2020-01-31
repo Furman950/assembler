@@ -9,6 +9,6 @@ object Main {
             return
         }
 
-        Assembler().run(args[0])
+        Assembler(args[0]).run()
     }
 }

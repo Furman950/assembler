@@ -11,7 +11,7 @@ class EncodeImmediateValue : State {
 
         val immediateValue = getImmediateValue(immediateStringValue)
 
-        val imm4 = immediateValue.ushr(16)
+        val imm4 = immediateValue.ushr(12)
             .shl(16)
         val imm12 = immediateValue.and(0xFFF)
 
