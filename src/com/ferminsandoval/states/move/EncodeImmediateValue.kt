@@ -7,7 +7,7 @@ import com.ferminsandoval.states.State
 
 class EncodeImmediateValue : State {
     override fun nextState(assembler: Assembler): State {
-        var immediateStringValue = assembler.currentInstruction.parameters[1]
+        var immediateStringValue = assembler.currentStatement.parameters[1]
 
         val immediateValue = getImmediateValue(immediateStringValue)
 

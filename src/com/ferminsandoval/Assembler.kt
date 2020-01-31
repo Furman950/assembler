@@ -1,49 +1,55 @@
 package com.ferminsandoval
 
-import com.ferminsandoval.models.Instruction
+import com.ferminsandoval.exceptions.InvalidStatementException
+import com.ferminsandoval.models.Statement
+import com.ferminsandoval.states.ErrorState
 import com.ferminsandoval.states.FindInstructionType
 import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
 import java.nio.file.Files
 import java.nio.file.Paths
 
+
 class Assembler {
     private lateinit var currentState: State
-    lateinit var instructions: MutableList<Instruction>
-    lateinit var currentInstruction: Instruction
+    lateinit var statements: MutableList<Statement>
+    lateinit var currentStatement: Statement
     var currentLine = 1
     var binaryInstruction: Int = 0
 
     fun run(filePath: String) {
-        instructions = ArrayList()
+        statements = ArrayList()
         Files.lines(Paths.get(filePath))
-            .forEach{x ->
-                if (x.isNotBlank()){
-                    tokenizeInstructions(x)
-                }
+            .forEach { x ->
+                tokenizeInstructions(x)
+
+                currentLine++
             }
 
         currentLine = 1
-        instructions.forEach{
-            currentInstruction = it
+        statements.forEach {
+            currentStatement = it
             parseInstructions()
             currentLine++
         }
     }
 
     private fun tokenizeInstructions(instruction: String) {
+        if (instruction.isEmpty()) return
+
         val instructionTokens = instruction.split(Regex(" |, "))
+            .filter(String::isNotBlank)
 
         if (instructionTokens.isEmpty())
-            throw IllegalArgumentException("Invalid instruction at line ${currentLine++}")
+            throw InvalidStatementException("Invalid statement at line $currentLine")
 
         val parameters = instructionTokens.slice(IntRange(1, instructionTokens.size - 1))
-        instructions.add(Instruction(instructionTokens[0], parameters))
+        statements.add(Statement(instructionTokens[0], parameters))
     }
 
     private fun parseInstructions() {
         currentState = FindInstructionType()
-        while (currentState !is Error && currentState !is Finished) {
+        while (currentState !is ErrorState && currentState !is Finished) {
             currentState = currentState.nextState(this)
         }
     }

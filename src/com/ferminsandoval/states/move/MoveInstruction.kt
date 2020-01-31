@@ -6,7 +6,7 @@ import com.ferminsandoval.states.State
 
 class MoveInstruction : State {
     override fun nextState(assembler: Assembler): State {
-        val mov = moveInstructions[assembler.currentInstruction.label]
+        val mov = moveInstructions[assembler.currentStatement.label]
         assembler.binaryInstruction = assembler.binaryInstruction.or(mov!!)
 
         return EncodeDestinationRegister()
