@@ -16,7 +16,8 @@ val moveInstructions = hashMapOf(
 
 val dataProcessing = hashMapOf(
     "ADD" to 0xE080_0000.toInt(),
-    "OR" to 0xE380_0000.toInt()
+    "OR" to 0xE380_0000.toInt(),
+    "CMP" to 0xE150_0000.toInt()
 )
 
 val dataTransfer = hashMapOf(

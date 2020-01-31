@@ -15,36 +15,35 @@ class FindInstructionType : State {
         val instruction = assembler.currentStatement
         val label = instruction.label
 
-        if (moveInstructions.containsKey(label)){
-            if (instruction.parameters.size < 2){
-                return ErrorState("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+        when {
+            moveInstructions.containsKey(label) -> {
+                if (instruction.parameters.size < 2){
+                    return ErrorState("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                }
+                return MoveInstruction()
             }
-            return MoveInstruction()
+            dataProcessing.containsKey(label) -> {
+                if (instruction.parameters.size < 2){
+                    return ErrorState("Expected three parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                }
+
+                return DataProcessingInstruction()
+            }
+            dataTransfer.containsKey(label) -> {
+                if (instruction.parameters.size < 2){
+                    return ErrorState("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                }
+
+                return DataTransferInstruction()
+            }
+            branching.containsKey(label) -> {
+                if (instruction.parameters.size != 1) {
+                    return ErrorState("Expected one parameter, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                }
+                return BranchingInstruction()
+            }
+            else -> return ErrorState("$label is not a valid instruction")
         }
 
-        else if (dataProcessing.containsKey(label)) {
-            if (instruction.parameters.size < 3){
-                return ErrorState("Expected three parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
-            }
-
-            return DataProcessingInstruction()
-        }
-
-        else if (dataTransfer.containsKey(label)){
-            if (instruction.parameters.size < 2){
-                return ErrorState("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
-            }
-
-            return DataTransferInstruction()
-        }
-
-        else if (branching.containsKey(label)) {
-            if (instruction.parameters.size != 1) {
-                return ErrorState("Expected one parameter, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
-            }
-            return BranchingInstruction()
-        }
-
-        return ErrorState("$label is not a valid instruction")
     }
 }

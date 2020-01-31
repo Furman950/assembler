@@ -6,6 +6,9 @@ import com.ferminsandoval.util.getRegisterNumber
 
 class EncodeDestinationRegister : State {
     override fun nextState(assembler: Assembler): State {
+        if (assembler.currentStatement.label == "CMP")
+            return EncodeSecondOperandCmp()
+
         val destinationRegister = assembler.currentStatement.parameters[0]
         val registerNumber = getRegisterNumber(destinationRegister)
             .shl(12)

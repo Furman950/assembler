@@ -7,6 +7,9 @@ import com.ferminsandoval.states.State
 
 class EncodeSecondOperand : State {
     override fun nextState(assembler: Assembler): State {
+        if (assembler.currentStatement.parameters.size == 2)
+            return Finished()
+
         var operand2 = assembler.currentStatement.parameters[2]
 
         var binaryMask = 0
