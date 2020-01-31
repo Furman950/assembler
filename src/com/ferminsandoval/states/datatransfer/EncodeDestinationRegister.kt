@@ -1,17 +1,18 @@
 package com.ferminsandoval.states.datatransfer
 
 import com.ferminsandoval.Assembler
+import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
 import com.ferminsandoval.util.getRegisterNumber
 
-class EncodeBaseRegisterLdr : State {
+class EncodeDestinationRegister : State {
     override fun nextState(assembler: Assembler): State {
-        val baseRegister = assembler.currentStatement.parameters[1].replace(Regex("[()]"), "")
-        val registerNumber = getRegisterNumber(baseRegister)
-        val registerMask = registerNumber.shl(16)
+        val destinationRegister = assembler.currentStatement.parameters[0]
+        val registerNumber = getRegisterNumber(destinationRegister)
+        val registerMask = registerNumber.shl(12)
 
         assembler.binaryInstruction = assembler.binaryInstruction.or(registerMask)
 
-        return EncodeDestinationRegisterLdr()
+        return Finished()
     }
 }

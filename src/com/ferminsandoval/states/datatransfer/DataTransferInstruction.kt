@@ -14,11 +14,6 @@ class DataTransferInstruction : State {
         val labelMask = dataTransfer[assembler.currentStatement.label]
         assembler.binaryInstruction = assembler.binaryInstruction.or(labelMask!!)
 
-        return if (assembler.currentStatement.label == "LDR"){
-            EncodeBaseRegisterLdr()
-        }
-        else {
-            EncodeBaseRegisterStr()
-        }
+        return EncodeBaseRegister()
     }
 }
