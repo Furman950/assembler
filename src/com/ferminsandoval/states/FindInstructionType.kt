@@ -1,6 +1,7 @@
 package com.ferminsandoval.states
 
 import com.ferminsandoval.Assembler
+import com.ferminsandoval.exceptions.InvalidStatementException
 import com.ferminsandoval.models.branching
 import com.ferminsandoval.models.dataProcessing
 import com.ferminsandoval.models.dataTransfer
@@ -18,31 +19,31 @@ class FindInstructionType : State {
         when {
             moveInstructions.containsKey(label) -> {
                 if (instruction.parameters.size < 2){
-                    return ErrorState("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                    throw InvalidStatementException("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
                 }
                 return MoveInstruction()
             }
             dataProcessing.containsKey(label) -> {
                 if (instruction.parameters.size < 2){
-                    return ErrorState("Expected three parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                    throw InvalidStatementException("Expected three parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
                 }
 
                 return DataProcessingInstruction()
             }
             dataTransfer.containsKey(label) -> {
                 if (instruction.parameters.size < 2){
-                    return ErrorState("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                    throw InvalidStatementException("Expected two parameters, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
                 }
 
                 return DataTransferInstruction()
             }
             branching.containsKey(label) -> {
                 if (instruction.parameters.size != 1) {
-                    return ErrorState("Expected one parameter, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
+                    throw InvalidStatementException("Expected one parameter, but found ${instruction.parameters.size} on line ${assembler.currentLine}")
                 }
                 return BranchingInstruction()
             }
-            else -> return ErrorState("$label is not a valid instruction")
+            else -> throw InvalidStatementException("$label is not a valid instruction")
         }
 
     }

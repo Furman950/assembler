@@ -2,7 +2,6 @@ package com.ferminsandoval
 
 import com.ferminsandoval.exceptions.InvalidStatementException
 import com.ferminsandoval.models.Statement
-import com.ferminsandoval.states.ErrorState
 import com.ferminsandoval.states.FindInstructionType
 import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
@@ -71,7 +70,7 @@ class Assembler(private val filePath: String) {
 
     private fun parseInstructions() {
         currentState = FindInstructionType()
-        while (currentState !is ErrorState && currentState !is Finished) {
+        while (currentState !is Finished) {
             currentState = currentState.nextState(this)
         }
     }
