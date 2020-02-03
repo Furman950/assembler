@@ -1,14 +1,15 @@
 package com.ferminsandoval.states.move
 
-import com.ferminsandoval.Assembler
+import com.ferminsandoval.models.Instruction
 import com.ferminsandoval.states.State
 import com.ferminsandoval.util.getRegisterNumber
 
-class EncodeDestinationRegister : State {
-    override fun nextState(assembler: Assembler): State {
-        val register = assembler.currentStatement.parameters[0]
-        val number = getRegisterNumber(register).shl(12)
-        assembler.binaryInstruction = assembler.binaryInstruction.or(number)
+class EncodeDestinationRegister : State{
+    override fun nextState(instruction: Instruction): State {
+        val register = instruction.parameters[0]
+        val registerNumber = getRegisterNumber(register).shl(12)
+
+        instruction.encoded = instruction.encoded.or(registerNumber)
 
         return EncodeImmediateValue()
     }

@@ -1,21 +1,20 @@
 package com.ferminsandoval.states.move
 
-import com.ferminsandoval.Assembler
 import com.ferminsandoval.exceptions.InvalidRangeException
+import com.ferminsandoval.models.Instruction
 import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
 
 class EncodeImmediateValue : State {
-    override fun nextState(assembler: Assembler): State {
-        var immediateStringValue = assembler.currentStatement.parameters[1]
-
-        val immediateValue = getImmediateValue(immediateStringValue)
+    override fun nextState(instruction: Instruction): State {
+        val immediateValueStr = instruction.parameters[1]
+        val immediateValue = getImmediateValue(immediateValueStr)
 
         val imm4 = immediateValue.ushr(12)
             .shl(16)
         val imm12 = immediateValue.and(0xFFF)
 
-        assembler.binaryInstruction = assembler.binaryInstruction.or(imm4)
+        instruction.encoded = instruction.encoded.or(imm4)
             .or(imm12)
 
         return Finished()
@@ -35,5 +34,4 @@ class EncodeImmediateValue : State {
 
         return immediateValue
     }
-
 }

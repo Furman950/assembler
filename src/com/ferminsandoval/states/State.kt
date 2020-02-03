@@ -1,7 +1,7 @@
 package com.ferminsandoval.states
 
-import com.ferminsandoval.Assembler
+import com.ferminsandoval.models.Instruction
 
 interface State {
-    fun nextState(assembler: Assembler): State
+    fun nextState(instruction: Instruction): State
 }

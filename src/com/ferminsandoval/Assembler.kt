@@ -1,43 +1,36 @@
 package com.ferminsandoval
 
-import com.ferminsandoval.exceptions.InvalidStatementException
-import com.ferminsandoval.models.Statement
-import com.ferminsandoval.states.FindInstructionType
-import com.ferminsandoval.states.Finished
-import com.ferminsandoval.states.State
+import com.ferminsandoval.exceptions.InvalidInstructionException
+import com.ferminsandoval.models.Instruction
+import com.ferminsandoval.states.*
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.stream.Collectors
 
 
 class Assembler(private val filePath: String) {
-
     private val binaryInstructions = ArrayList<Int>()
-    private lateinit var currentState: State
-    lateinit var statements: MutableList<Statement>
-    lateinit var currentStatement: Statement
-    var currentLine = 1
-    var binaryInstruction: Int = 0
+    private val instructions = ArrayList<Instruction>()
+
+    private lateinit var rawInstructions: ArrayList<String>
 
     fun run() {
-        statements = ArrayList()
-        Files.lines(Paths.get(filePath))
-            .forEach { x ->
-                tokenizeInstructions(x)
-                currentLine++
-            }
-
-        currentLine = 1
-        statements.forEach {
-            currentStatement = it
-            parseInstructions()
-            currentLine++
-            binaryInstructions.add(binaryInstruction)
-            binaryInstruction = 0
-        }
-
+        loadIntoMemory()
+        runPreAssembler()
+        tokenizeInstructions()
+        parseInstructions()
         writeInstructionsToFile()
     }
+
+    private fun loadIntoMemory() {
+        rawInstructions = Files.lines(Paths.get(filePath)).collect(Collectors.toList()) as ArrayList<String>
+    }
+
+    private fun runPreAssembler() {
+
+    }
+
 
     private fun writeInstructionsToFile() {
         val outputFile = Paths.get("").toAbsolutePath().toString() + "\\kernel7.img"
@@ -55,23 +48,31 @@ class Assembler(private val filePath: String) {
         kernel7.writeBytes(byteArray)
     }
 
-    private fun tokenizeInstructions(instruction: String) {
-        if (instruction.isEmpty()) return
+    private fun tokenizeInstructions() {
+        var currentFileLine = 1
+        for(instruction in rawInstructions){
+            if (instruction.isEmpty()) continue
 
-        val instructionTokens = instruction.split(Regex(" |, "))
-            .filter(String::isNotBlank)
+            val instructionTokens = instruction.split(Regex(" |, "))
+                .filter(String::isNotBlank)
 
-        if (instructionTokens.isEmpty())
-            throw InvalidStatementException("Invalid statement at line $currentLine")
+            if (instructionTokens.isEmpty())
+                throw InvalidInstructionException("Invalid statement at line $currentFileLine")
 
-        val parameters = instructionTokens.slice(IntRange(1, instructionTokens.size - 1))
-        statements.add(Statement(instructionTokens[0], parameters))
+            val parameters = instructionTokens.slice(IntRange(1, instructionTokens.size - 1))
+            instructions.add(Instruction(instructionTokens[0], parameters, currentFileLine))
+        }
     }
 
     private fun parseInstructions() {
-        currentState = FindInstructionType()
-        while (currentState !is Finished) {
-            currentState = currentState.nextState(this)
+        for(instruction in instructions){
+            var currentState: State = FindInstructionType()
+
+            while (currentState !is Finished){
+                currentState = currentState.nextState(instruction)
+            }
+
+            binaryInstructions.add(instruction.encoded)
         }
     }
 }

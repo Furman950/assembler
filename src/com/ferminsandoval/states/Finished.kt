@@ -1,9 +1,9 @@
-package com.ferminsandoval.states;
+package com.ferminsandoval.states
 
-import com.ferminsandoval.Assembler
+import com.ferminsandoval.models.Instruction
 
-class Finished : State {
-    override fun nextState(assembler: Assembler): State {
-        return this
+class Finished : State{
+    override fun nextState(instruction: Instruction): State {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
