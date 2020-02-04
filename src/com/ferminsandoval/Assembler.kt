@@ -3,6 +3,7 @@ package com.ferminsandoval
 import com.ferminsandoval.exceptions.InvalidInstructionException
 import com.ferminsandoval.models.Instruction
 import com.ferminsandoval.states.*
+import com.ferminsandoval.util.PreAssembler
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -21,6 +22,7 @@ class Assembler(private val filePath: String) {
         tokenizeInstructions()
         parseInstructions()
         writeInstructionsToFile()
+//        writeToTestFile()
     }
 
     private fun loadIntoMemory() {
@@ -28,7 +30,14 @@ class Assembler(private val filePath: String) {
     }
 
     private fun runPreAssembler() {
+        rawInstructions = PreAssembler.run(rawInstructions) as ArrayList<String>
+    }
 
+    private fun writeToTestFile() {
+        val testFilePath = Paths.get("").toAbsolutePath().toString() + "\\test.s"
+        val str = rawInstructions.reduce { pre, new -> pre + "\n" + new }
+        File(testFilePath)
+            .writeText(str)
     }
 
 
@@ -49,8 +58,9 @@ class Assembler(private val filePath: String) {
     }
 
     private fun tokenizeInstructions() {
-        var currentFileLine = 1
-        for(instruction in rawInstructions){
+        var currentFileLine = 0
+        for (instruction in rawInstructions) {
+            currentFileLine++
             if (instruction.isEmpty()) continue
 
             val instructionTokens = instruction.split(Regex(" |, "))
@@ -65,10 +75,10 @@ class Assembler(private val filePath: String) {
     }
 
     private fun parseInstructions() {
-        for(instruction in instructions){
+        for (instruction in instructions) {
             var currentState: State = FindInstructionType()
 
-            while (currentState !is Finished){
+            while (currentState !is Finished) {
                 currentState = currentState.nextState(instruction)
             }
 

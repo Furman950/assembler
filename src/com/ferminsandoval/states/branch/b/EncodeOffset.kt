@@ -3,6 +3,7 @@ package com.ferminsandoval.states.branch.b
 import com.ferminsandoval.models.Instruction
 import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
+import java.lang.Long
 
 class EncodeOffset : State {
     override fun nextState(instruction: Instruction): State {
@@ -11,7 +12,7 @@ class EncodeOffset : State {
             offset = offset.removePrefix("0x")
         }
 
-        val offsetMask = Integer.parseInt(offset, 16)
+        val offsetMask = Long.parseLong(offset, 16).toInt()
 
         instruction.encoded = instruction.encoded.or(offsetMask)
 

@@ -6,6 +6,8 @@ import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
 import com.ferminsandoval.util.getRegisterNumber
 
+import java.lang.Long
+
 class EncodeSecondOperand : State {
     override fun nextState(instruction: Instruction): State {
         if (instruction.parameters.size == 2) return Finished()
@@ -30,7 +32,7 @@ class EncodeSecondOperand : State {
 
     private fun getHexValue(operand2: String): Int {
         val switchBitToImmediateValue = 0x2000000
-        return Integer.parseInt(operand2.removePrefix("0x"), 16)
+        return Long.parseLong(operand2.removePrefix("0x"), 16).toInt()
             .or(switchBitToImmediateValue)
     }
 

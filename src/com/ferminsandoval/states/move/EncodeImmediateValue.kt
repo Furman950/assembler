@@ -5,6 +5,8 @@ import com.ferminsandoval.models.Instruction
 import com.ferminsandoval.states.Finished
 import com.ferminsandoval.states.State
 
+import java.lang.Long
+
 class EncodeImmediateValue : State {
     override fun nextState(instruction: Instruction): State {
         val immediateValueStr = instruction.parameters[1]
@@ -23,7 +25,7 @@ class EncodeImmediateValue : State {
     private fun getImmediateValue(rawImmediateValue: String): Int {
 
         var immediateValue = if (rawImmediateValue.startsWith("0x")) {
-            Integer.parseInt(rawImmediateValue.removePrefix("0x"), 16)
+            Long.parseLong(rawImmediateValue.removePrefix("0x"), 16).toInt()
         } else {
             rawImmediateValue.toInt()
         }
