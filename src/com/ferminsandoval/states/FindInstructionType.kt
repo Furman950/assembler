@@ -10,6 +10,8 @@ import com.ferminsandoval.states.dataprocessing.cmp.Cmp
 import com.ferminsandoval.states.dataprocessing.mov.Mov
 import com.ferminsandoval.states.dataprocessing.or.Or
 import com.ferminsandoval.states.datatransfer.ldr.Ldr
+import com.ferminsandoval.states.datatransfer.pop.Pop
+import com.ferminsandoval.states.datatransfer.push.Push
 import com.ferminsandoval.states.datatransfer.str.Str
 import com.ferminsandoval.states.move.movt.Movt
 import com.ferminsandoval.states.move.movw.Movw
@@ -27,6 +29,8 @@ class FindInstructionType : State {
 
             "LDR" -> Ldr()
             "STR" -> Str()
+            "PUSH" -> Push()
+            "POP" -> Pop()
 
             "B" -> B()
             "BAL" -> B()

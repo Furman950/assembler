@@ -12,6 +12,8 @@ val instructionSet = hashMapOf(
 
     "LDR" to 0xE590_0000.toInt(),
     "STR" to 0xE580_0000.toInt(),
+    "PUSH" to 0xE5ad0004.toInt(),
+    "POP" to 0xE43d0004.toInt(),
 
     "BLT" to 0xBA00_0000.toInt(),
     "BAL" to 0xEA00_0000.toInt(),

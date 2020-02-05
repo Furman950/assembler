@@ -61,7 +61,7 @@ class Assembler(private val filePath: String) {
         var currentFileLine = 0
         for (instruction in rawInstructions) {
             currentFileLine++
-            if (instruction.isEmpty()) continue
+            if (instruction.isBlank()) continue
 
             val instructionTokens = instruction.split(Regex(" |, "))
                 .filter(String::isNotBlank)
