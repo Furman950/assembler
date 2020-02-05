@@ -12,7 +12,8 @@ class EncodeOffset : State {
             offset = offset.removePrefix("0x")
         }
 
-        val offsetMask = Long.parseLong(offset, 16).toInt().and(0xFF_FFFF)
+        var offsetMask = Long.parseLong(offset, 16).toInt()
+            .and(0xFF_FFFF)
 
         instruction.encoded = instruction.encoded.or(offsetMask)
 

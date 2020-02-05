@@ -46,11 +46,9 @@ class PreAssembler {
             return newInstructions
         }
 
-        private fun getOffsetInHexString(currentInstructionLine: Int, i: Int): String {
-            var currentLine = if (currentInstructionLine < i) currentInstructionLine + 2
-            else
-                currentInstructionLine -2
-            val offset = i - currentLine
+        private fun getOffsetInHexString(currentInstructionLine: Int, labelLocation: Int): String {
+            var currentLine = currentInstructionLine + 2
+            val offset = labelLocation - currentLine
             return String.format("0x%x", offset)
         }
 
