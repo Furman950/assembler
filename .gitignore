@@ -69,3 +69,7 @@ fabric.properties
 kernel7.img
 *.s
 *.zip
+
+.gradle
+/build
+/lib
