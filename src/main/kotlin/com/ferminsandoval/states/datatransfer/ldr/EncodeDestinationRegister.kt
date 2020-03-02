@@ -13,6 +13,7 @@ class EncodeDestinationRegister : State {
 
         instruction.encoded = instruction.encoded.or(registerMask)
 
-        return Finished()
+        return if (instruction.parameters.size == 2) Finished()
+        else EncodeOffset()
     }
 }
